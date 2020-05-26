@@ -1,0 +1,3 @@
+rootProject.name='MoveConstraintLayout'
+include ':app'
+include ':moveconstraintlayout'
