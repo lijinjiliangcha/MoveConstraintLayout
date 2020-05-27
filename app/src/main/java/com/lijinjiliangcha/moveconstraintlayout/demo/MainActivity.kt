@@ -16,6 +16,9 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "点击", Toast.LENGTH_SHORT).show()
         }
 
+//        tv_move_1.setOnClickListener {
+//            Toast.makeText(this, "点击", Toast.LENGTH_SHORT).show()
+//        }
     }
 
 }

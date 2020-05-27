@@ -22,7 +22,7 @@ class MoveConstraintLayout : ConstraintLayout {
     private var dx = 0f
     private var dy = 0f
     //点下时的时间
-    private var clickTime = 0L
+//    private var clickTime = 0L
     //是否正在移动view，true-正在移动
     private var isMove = false
 
@@ -47,85 +47,11 @@ class MoveConstraintLayout : ConstraintLayout {
         super.removeAllViews()
     }
 
-//    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        Log.i("测试", "onTouchEvent")
-//
-//        if (moveView != null) {
-//            when (event.action) {
-//                MotionEvent.ACTION_DOWN -> {
-//                    dx = event.x
-//                    dy = event.y
-//                    clickTime = System.currentTimeMillis()
-//                    moveView = getMoveView(dx, dy)
-////                    if (moveView != null)
-////                        return true
-//                }
-//                MotionEvent.ACTION_MOVE -> {
-//                    val mx = event.x
-//                    val my = event.y
-//                    //判断是否已开始移动
-//                    if (isMove) {
-//                        val deltaX = mx - dx
-//                        val deltaY = my - dy
-//                        val l = (moveView?.left ?: 0) + deltaX.toInt()
-//                        val t = (moveView?.top ?: 0) + deltaY.toInt()
-//                        moveView?.layout(l, t, l + moveView!!.width, t + moveView!!.height)
-//                        dx = mx
-//                        dy = my
-//                        return true
-//                    } else if (Math.abs(my - dy) > moveDis || Math.abs(mx - dx) > moveDis) {
-//                        isMove = true
-//                        return true
-//                    }
-//
-//                }
-//                MotionEvent.ACTION_UP -> {
-//                    moveView = null
-//                    if (isMove) {
-//                        isMove = false
-//                        return true
-//                    } else {
-//                        Log.i("测试","点击")
-//                        val ux = event.x
-//                        val uy = event.y
-//                        val upTime = System.currentTimeMillis()
-//                        if (upTime - clickTime < 200 && (Math.abs(uy - dy) < moveDis && Math.abs(ux - dx) < moveDis)) {
-//                            Log.i("测试","点击 super")
-//                            return false
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
-//        return super.onTouchEvent(event)
-//    }
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        Log.i("测试", "onTouchEvent")
+        return moveView != null
+    }
 
-//    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-//        Log.i("测试", "onInterceptTouchEvent")
-//        when (event.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                dx = event.x
-//                dy = event.y
-//                moveView = getMoveView(dx, dy)
-//                if (moveView != null)
-//                    return true
-//            }
-////            MotionEvent.ACTION_MOVE -> {
-////                Log.i("测试","---------------------------ACTION_MOVE")
-////                if (moveView != null) {
-////                    val mx = event.x
-////                    val my = event.y
-////                    //位移大于25px，认为开始移动，拦截触摸事件
-////                    if (Math.abs(my - dy) > moveDis || Math.abs(mx - dx) > moveDis) {
-////                        isMove = true
-////                        return true
-////                    }
-////                }
-////            }
-//        }
-//        return super.onInterceptTouchEvent(event)
-//    }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         Log.i("测试", "dispatchTouchEvent")
@@ -133,7 +59,7 @@ class MoveConstraintLayout : ConstraintLayout {
             MotionEvent.ACTION_DOWN -> {
                 dx = event.x
                 dy = event.y
-                clickTime = System.currentTimeMillis()
+//                clickTime = System.currentTimeMillis()
                 moveView = getMoveView(dx, dy)
 //                if (moveView != null)
 //                    return true
@@ -166,26 +92,6 @@ class MoveConstraintLayout : ConstraintLayout {
                     isMove = false
                     return true
                 }
-//                else {
-//                    val upTime = System.currentTimeMillis()
-//                    val ux = event.x
-//                    val uy = event.y
-//                    if (upTime - clickTime < 200 && (Math.abs(uy - dy) < moveDis && Math.abs(ux - dx) < moveDis)) {
-//                        Log.i("测试", "点击 super")
-//                        return false
-//                    }
-//                }
-//                Log.i("测试","ACTION_UP")
-//                else {
-//                    Log.i("测试", "点击")
-//                    val ux = event.x
-//                    val uy = event.y
-//                    val upTime = System.currentTimeMillis()
-//                    if (upTime - clickTime < 200 && (Math.abs(uy - dy) < moveDis && Math.abs(ux - dx) < moveDis)) {
-//                        Log.i("测试", "点击 super")
-//                        return false
-//                    }
-//                }
             }
         }
         return super.dispatchTouchEvent(event)
