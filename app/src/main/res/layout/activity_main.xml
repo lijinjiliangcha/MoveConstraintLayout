@@ -20,8 +20,23 @@
         android:layout_height="100dp"
         android:background="#0f0"
         android:gravity="center"
-        android:text="可以移动"
+        android:text="垂直移动"
         android:textColor="#000"
+        app:layout_canMoveHorizontally="false"
+        app:layout_constraint_move="true" />
+
+    <TextView
+        android:id="@+id/tv_move_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="#0f0"
+        android:gravity="center"
+        android:text="水平移动"
+        android:textColor="#000"
+        app:layout_canMoveVertically="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraint_move="true" />
 
 </com.lijinjiliangcha.moveconstraintlayout.MoveConstraintLayout>

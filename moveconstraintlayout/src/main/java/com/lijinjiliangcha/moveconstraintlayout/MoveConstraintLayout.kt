@@ -21,8 +21,6 @@ class MoveConstraintLayout : ConstraintLayout {
     //点下或移动时前一次坐标
     private var dx = 0f
     private var dy = 0f
-    //点下时的时间
-//    private var clickTime = 0L
     //是否正在移动view，true-正在移动
     private var isMove = false
 
@@ -59,13 +57,9 @@ class MoveConstraintLayout : ConstraintLayout {
             MotionEvent.ACTION_DOWN -> {
                 dx = event.x
                 dy = event.y
-//                clickTime = System.currentTimeMillis()
                 moveView = getMoveView(dx, dy)
-//                if (moveView != null)
-//                    return true
             }
             MotionEvent.ACTION_MOVE -> {
-                Log.i("测试", "ACTION_MOVE")
                 if (moveView != null) {
                     val mx = event.x
                     val my = event.y
@@ -73,13 +67,11 @@ class MoveConstraintLayout : ConstraintLayout {
                     if (isMove) {
                         val deltaX = mx - dx
                         val deltaY = my - dy
-                        val l = (moveView?.left ?: 0) + deltaX.toInt()
-                        val t = (moveView?.top ?: 0) + deltaY.toInt()
-                        moveView?.layout(l, t, l + moveView!!.width, t + moveView!!.height)
+                        moveView?.let { moveViewBy(it, deltaX.toInt(), deltaY.toInt()) }
                         dx = mx
                         dy = my
                         return true
-                    } else if (Math.abs(my - dy) > moveDis || Math.abs(mx - dx) > moveDis) {//位移大于25px，认为开始移动
+                    } else if (Math.abs(my - dy) > moveDis || Math.abs(mx - dx) > moveDis) {//位移大于25moveDis，认为开始移动
                         isMove = true
                         return true
                     }
@@ -88,7 +80,6 @@ class MoveConstraintLayout : ConstraintLayout {
             MotionEvent.ACTION_UP -> {
                 moveView = null
                 if (isMove) {
-                    Log.i("测试", "isMove = $isMove")
                     isMove = false
                     return true
                 }
@@ -97,6 +88,18 @@ class MoveConstraintLayout : ConstraintLayout {
         return super.dispatchTouchEvent(event)
     }
 
+    private fun moveViewBy(view: View, x: Int, y: Int) {
+        val params = view.layoutParams as LayoutParams
+        val l = view.left + if (params.canMoveHorizontally) x else 0
+        val t = view.top + if (params.canMoveVertically) y else 0
+        view.layout(l, t, l + view.width, t + view.height)
+    }
+
+    override fun scrollBy(x: Int, y: Int) {
+        super.scrollBy(x, y)
+    }
+
+    //获取可移动view
     private fun getMoveView(x: Float, y: Float): View? {
         moveViewList.forEach {
             val rect = Rect(it.left, it.top, it.right, it.bottom)
@@ -108,15 +111,28 @@ class MoveConstraintLayout : ConstraintLayout {
 
     class LayoutParams : ConstraintLayout.LayoutParams {
 
+        //是否可以移动
         var move: Boolean = false
+        //能否垂直移动
+        var canMoveVertically = true
+        //能否水平移动
+        var canMoveHorizontally = true
 
         constructor(source: ConstraintLayout.LayoutParams?) : super(source)
         constructor(width: Int, height: Int) : super(width, height)
-        constructor(source: ViewGroup.LayoutParams?) : super(source)
+        constructor(source: ViewGroup.LayoutParams?) : super(source) {
+            if (source is LayoutParams) {
+                move = source.move
+                canMoveVertically = source.canMoveVertically
+                canMoveHorizontally = source.canMoveHorizontally
+            }
+        }
+
         constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs) {
             val attr = c?.obtainStyledAttributes(attrs, R.styleable.MoveConstraintLayout_Layout)
             move = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_constraint_move, false) ?: false
-            Log.i("测试", "move = $move")
+            canMoveVertically = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_canMoveVertically, true) ?: true
+            canMoveHorizontally = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_canMoveHorizontally, true) ?: true
             attr?.recycle()
         }
 

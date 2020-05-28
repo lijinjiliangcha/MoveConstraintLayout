@@ -3,6 +3,8 @@
 
     <declare-styleable name="MoveConstraintLayout_Layout">
         <attr name="layout_constraint_move" format="boolean" />
+        <attr name="layout_canMoveVertically" format="boolean" />
+        <attr name="layout_canMoveHorizontally" format="boolean" />
     </declare-styleable>
 
 </resources>
