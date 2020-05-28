@@ -2,7 +2,20 @@
 <com.lijinjiliangcha.moveconstraintlayout.MoveConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:movePaddingBottom="100dp"
+    app:movePaddingLeft="20dp"
+    app:movePaddingRight="80dp"
+    app:movePaddingTop="50dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginBottom="100dp"
+        android:background="#ccc" />
 
     <ImageView
         android:id="@+id/iv_move"
@@ -38,5 +51,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraint_move="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background="#00f"
+        android:gravity="center"
+        android:text="不能动的"
+        android:textColor="#fff"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </com.lijinjiliangcha.moveconstraintlayout.MoveConstraintLayout>

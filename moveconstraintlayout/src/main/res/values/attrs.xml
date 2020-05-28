@@ -5,6 +5,15 @@
         <attr name="layout_constraint_move" format="boolean" />
         <attr name="layout_canMoveVertically" format="boolean" />
         <attr name="layout_canMoveHorizontally" format="boolean" />
+        <attr name="layout_beyond_the_border" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MoveConstraintLayout">
+        <attr name="movePaddingLeft" format="dimension" />
+        <attr name="movePaddingTop" format="dimension" />
+        <attr name="movePaddingRight" format="dimension" />
+        <attr name="movePaddingBottom" format="dimension" />
+        <attr name="movePadding" format="dimension" />
     </declare-styleable>
 
 </resources>

@@ -8,15 +8,22 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 
 class MoveConstraintLayout : ConstraintLayout {
 
     //判断移动误差范围
     private val moveDis = 5
-
+    //可移动控件存储集合
     private val moveViewList = ArrayList<View>()
     //当前移动的View
     private var moveView: View? = null
+
+    //可移动边距
+    var movePaddingLeft = 0
+    var movePaddingTop = 0
+    var movePaddingRight = 0
+    var movePaddingBottom = 0
 
     //点下或移动时前一次坐标
     private var dx = 0f
@@ -24,9 +31,28 @@ class MoveConstraintLayout : ConstraintLayout {
     //是否正在移动view，true-正在移动
     private var isMove = false
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        val attr = context.obtainStyledAttributes(attrs, R.styleable.MoveConstraintLayout)
+        if (attr.hasValue(R.styleable.MoveConstraintLayout_movePadding)) {
+            val movePadding = attr.getDimensionPixelSize(R.styleable.MoveConstraintLayout_movePadding, 0)
+            movePaddingLeft = movePadding
+            movePaddingTop = movePadding
+            movePaddingRight = movePadding
+            movePaddingBottom = movePadding
+        } else {
+            movePaddingLeft = attr.getDimensionPixelSize(R.styleable.MoveConstraintLayout_movePaddingLeft, 0)
+            movePaddingTop = attr.getDimensionPixelSize(R.styleable.MoveConstraintLayout_movePaddingTop, 0)
+            movePaddingRight = attr.getDimensionPixelSize(R.styleable.MoveConstraintLayout_movePaddingRight, 0)
+            movePaddingBottom = attr.getDimensionPixelSize(R.styleable.MoveConstraintLayout_movePaddingBottom, 0)
+        }
+        attr.recycle()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
         return LayoutParams(context, attrs)
@@ -89,14 +115,48 @@ class MoveConstraintLayout : ConstraintLayout {
     }
 
     private fun moveViewBy(view: View, x: Int, y: Int) {
-        val params = view.layoutParams as LayoutParams
-        val l = view.left + if (params.canMoveHorizontally) x else 0
-        val t = view.top + if (params.canMoveVertically) y else 0
+//        val params = view.layoutParams as LayoutParams
+        val l = moveByHorizontally(view, x)
+        val t = moveByVertically(view, y)
         view.layout(l, t, l + view.width, t + view.height)
     }
 
-    override fun scrollBy(x: Int, y: Int) {
-        super.scrollBy(x, y)
+    private fun moveByHorizontally(view: View, x: Int): Int {
+        val params = view.layoutParams as LayoutParams
+        var l = view.left + if (params.canMoveHorizontally) x else 0
+        if (!params.beyondTheBorder) {
+            l = checkHorizontallyBorder(view, l)
+        }
+        return l
+    }
+
+    private fun moveByVertically(view: View, y: Int): Int {
+        val params = view.layoutParams as LayoutParams
+        var t = view.top + if (params.canMoveVertically) y else 0
+        if (!params.beyondTheBorder) {
+            t = checkVerticallyBorder(view, t)
+        }
+        return t
+    }
+
+    //检测view是否超出边界
+    private fun checkHorizontallyBorder(view: View, left: Int): Int {
+        if (left < movePaddingLeft)
+            return movePaddingLeft
+        else if (left > width - movePaddingRight - view.width)
+            return width - movePaddingRight - view.width
+        else
+            return left
+    }
+
+    //检测view是否超出边界
+    private fun checkVerticallyBorder(view: View, top: Int): Int {
+        if (top < movePaddingTop)
+            return movePaddingTop
+        else if (top > height - movePaddingBottom - view.height)
+            return height - movePaddingBottom - view.height
+        else
+            return top
     }
 
     //获取可移动view
@@ -109,6 +169,19 @@ class MoveConstraintLayout : ConstraintLayout {
         return null
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        moveViewList.forEach {
+            val params = it.layoutParams as LayoutParams
+            //不能超出屏幕边界时
+            if (!params.beyondTheBorder) {
+                val l = checkHorizontallyBorder(it, it.left)
+                val t = checkVerticallyBorder(it, it.top)
+                it.layout(l, t, l + it.width, t + it.height)
+            }
+        }
+    }
+
     class LayoutParams : ConstraintLayout.LayoutParams {
 
         //是否可以移动
@@ -117,6 +190,8 @@ class MoveConstraintLayout : ConstraintLayout {
         var canMoveVertically = true
         //能否水平移动
         var canMoveHorizontally = true
+        //能否超出布局边界
+        var beyondTheBorder = false
 
         constructor(source: ConstraintLayout.LayoutParams?) : super(source)
         constructor(width: Int, height: Int) : super(width, height)
@@ -133,7 +208,9 @@ class MoveConstraintLayout : ConstraintLayout {
             move = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_constraint_move, false) ?: false
             canMoveVertically = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_canMoveVertically, true) ?: true
             canMoveHorizontally = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_canMoveHorizontally, true) ?: true
+            beyondTheBorder = attr?.getBoolean(R.styleable.MoveConstraintLayout_Layout_layout_beyond_the_border, false) ?: false
             attr?.recycle()
+
         }
 
     }
