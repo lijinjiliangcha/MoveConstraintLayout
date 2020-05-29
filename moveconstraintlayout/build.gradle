@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//jcenter
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 29
@@ -35,4 +37,18 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+}
+
+publish {
+    //bintray.com用户名
+    userOrg = 'lijinjiliangcha'
+    //这个自己可以自己随便写，这是导入依赖库的名称
+    groupId = 'com.lijinjiliangcha'
+    //项目名称，创建Package的那个名称
+    artifactId = 'MoveConstraintLayout'
+    //版本号
+    publishVersion = '1.0.0'
+    //说明
+    desc = 'Inherited from ConstraintLayout, the child view can be moved arbitrarily'
+    website = 'https://github.com/lijinjiliangcha/MoveConstraintLayout'
 }

@@ -36,5 +36,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation project(path: ':moveconstraintlayout')
+    //材料设计
+    api 'com.google.android.material:material:1.1.0'
+    //上下拉刷新
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
+    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
 
 }

@@ -8,7 +8,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.children
 
 class MoveConstraintLayout : ConstraintLayout {
 
@@ -51,7 +50,16 @@ class MoveConstraintLayout : ConstraintLayout {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        Log.i("测试", "onMeasure")
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        moveViewList.forEach {
+
+            val viewWidget = getViewWidget(it)
+            val x = checkHorizontallyBorder(viewWidget.x, viewWidget.width)
+            val y = checkVerticallyBorder(viewWidget.y, viewWidget.height)
+            viewWidget.setOrigin(x, y)
+            viewWidget.updateDrawPosition()
+        }
     }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
@@ -119,13 +127,16 @@ class MoveConstraintLayout : ConstraintLayout {
         val l = moveByHorizontally(view, x)
         val t = moveByVertically(view, y)
         view.layout(l, t, l + view.width, t + view.height)
+        val viewWidget = getViewWidget(view)
+        viewWidget.setOrigin(l, t)
+        viewWidget.updateDrawPosition()
     }
 
     private fun moveByHorizontally(view: View, x: Int): Int {
         val params = view.layoutParams as LayoutParams
         var l = view.left + if (params.canMoveHorizontally) x else 0
         if (!params.beyondTheBorder) {
-            l = checkHorizontallyBorder(view, l)
+            l = checkHorizontallyBorder(l, view.height)
         }
         return l
     }
@@ -134,29 +145,33 @@ class MoveConstraintLayout : ConstraintLayout {
         val params = view.layoutParams as LayoutParams
         var t = view.top + if (params.canMoveVertically) y else 0
         if (!params.beyondTheBorder) {
-            t = checkVerticallyBorder(view, t)
+            t = checkVerticallyBorder(t, view.width)
         }
         return t
     }
 
     //检测view是否超出边界
-    private fun checkHorizontallyBorder(view: View, left: Int): Int {
-        if (left < movePaddingLeft)
-            return movePaddingLeft
-        else if (left > width - movePaddingRight - view.width)
-            return width - movePaddingRight - view.width
-        else
-            return left
+    private fun checkHorizontallyBorder(left: Int, viewWidth: Int): Int {
+        Log.i("测试","width = $width，measuredWidth = $measuredWidth")
+        val w = if (width != 0) width else measuredWidth
+        if (w != 0)
+            if (left < movePaddingLeft)
+                return movePaddingLeft
+            else if (left > w - movePaddingRight - viewWidth)
+                return w - movePaddingRight - viewWidth
+        return left
     }
 
     //检测view是否超出边界
-    private fun checkVerticallyBorder(view: View, top: Int): Int {
-        if (top < movePaddingTop)
-            return movePaddingTop
-        else if (top > height - movePaddingBottom - view.height)
-            return height - movePaddingBottom - view.height
-        else
-            return top
+    private fun checkVerticallyBorder(top: Int, viewHeight: Int): Int {
+        Log.i("测试","height = ${height}，measuredHeight = $measuredHeight")
+        val h = if (height != 0) height else measuredHeight
+        if (h != 0)
+            if (top < movePaddingTop)
+                return movePaddingTop
+            else if (top > h - movePaddingBottom - viewHeight)
+                return h - movePaddingBottom - viewHeight
+        return top
     }
 
     //获取可移动view
@@ -170,16 +185,26 @@ class MoveConstraintLayout : ConstraintLayout {
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        Log.i("测试", "onLayout")
+
+//        moveViewList.forEach {
+//            val viewWidget = getViewWidget(it)
+////            viewWidget.drawX
+//            Log.i("测试", "viewWidget.getX() = ${viewWidget.x}，viewWidget.getY() = ${viewWidget.y}")
+//        }
+
         super.onLayout(changed, left, top, right, bottom)
         moveViewList.forEach {
-            val params = it.layoutParams as LayoutParams
-            //不能超出屏幕边界时
-            if (!params.beyondTheBorder) {
-                val l = checkHorizontallyBorder(it, it.left)
-                val t = checkVerticallyBorder(it, it.top)
-                it.layout(l, t, l + it.width, t + it.height)
-            }
+            //            val params = it.layoutParams as LayoutParams
+//            //不能超出屏幕边界时
+//            if (!params.beyondTheBorder) {
+//                val l = checkHorizontallyBorder(it, it.left)
+//                val t = checkVerticallyBorder(it, it.top)
+//                it.layout(l, t, l + it.width, t + it.height)
+//            }
+            Log.i("测试", "view.left = ${it.left}，view.top = ${it.top}")
         }
+
     }
 
     class LayoutParams : ConstraintLayout.LayoutParams {

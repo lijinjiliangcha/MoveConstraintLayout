@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.lijinjiliangcha.moveconstraintlayout.MoveConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:movePaddingBottom="100dp"
     app:movePaddingLeft="20dp"
     app:movePaddingRight="80dp"
     app:movePaddingTop="50dp">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/srl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <ImageView
         android:layout_width="match_parent"
@@ -17,11 +31,15 @@
         android:layout_marginBottom="100dp"
         android:background="#ccc" />
 
-    <ImageView
-        android:id="@+id/iv_move"
+    <TextView
+        android:id="@+id/tv_move"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="#f00"
+        android:gravity="center"
+        android:text="不受限制的"
+        android:textColor="#fff"
+        app:layout_beyond_the_border="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
