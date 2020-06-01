@@ -53,10 +53,21 @@ class MoveConstraintLayout : ConstraintLayout {
         Log.i("测试", "onMeasure")
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         moveViewList.forEach {
-
+            val layoutParams = it.layoutParams as LayoutParams
             val viewWidget = getViewWidget(it)
-            val x = checkHorizontallyBorder(viewWidget.x, viewWidget.width)
-            val y = checkVerticallyBorder(viewWidget.y, viewWidget.height)
+            Log.i("测试", "l = ${it.left}，t = ${it.top}")
+            Log.i("测试", "viewWidget.x = ${viewWidget.x}，viewWidget.y = ${viewWidget.y}")
+            val x: Int
+            val y: Int
+            if (layoutParams.skipMeasure) {
+                x = it.left
+                y = it.top
+            } else {
+                x = checkHorizontallyBorder(viewWidget.x, viewWidget.width)
+                y = checkVerticallyBorder(viewWidget.y, viewWidget.height)
+
+            }
+            Log.i("测试", "x = $x，y = $y")
             viewWidget.setOrigin(x, y)
             viewWidget.updateDrawPosition()
         }
@@ -107,6 +118,7 @@ class MoveConstraintLayout : ConstraintLayout {
                         return true
                     } else if (Math.abs(my - dy) > moveDis || Math.abs(mx - dx) > moveDis) {//位移大于25moveDis，认为开始移动
                         isMove = true
+                        (moveView?.layoutParams as LayoutParams).skipMeasure = true
                         return true
                     }
                 }
@@ -152,7 +164,7 @@ class MoveConstraintLayout : ConstraintLayout {
 
     //检测view是否超出边界
     private fun checkHorizontallyBorder(left: Int, viewWidth: Int): Int {
-        Log.i("测试","width = $width，measuredWidth = $measuredWidth")
+        Log.i("测试", "width = $width，measuredWidth = $measuredWidth")
         val w = if (width != 0) width else measuredWidth
         if (w != 0)
             if (left < movePaddingLeft)
@@ -164,7 +176,7 @@ class MoveConstraintLayout : ConstraintLayout {
 
     //检测view是否超出边界
     private fun checkVerticallyBorder(top: Int, viewHeight: Int): Int {
-        Log.i("测试","height = ${height}，measuredHeight = $measuredHeight")
+        Log.i("测试", "height = ${height}，measuredHeight = $measuredHeight")
         val h = if (height != 0) height else measuredHeight
         if (h != 0)
             if (top < movePaddingTop)
@@ -217,6 +229,9 @@ class MoveConstraintLayout : ConstraintLayout {
         var canMoveHorizontally = true
         //能否超出布局边界
         var beyondTheBorder = false
+        //是否跳过测量定位
+        var skipMeasure = false
+
 
         constructor(source: ConstraintLayout.LayoutParams?) : super(source)
         constructor(width: Int, height: Int) : super(width, height)
