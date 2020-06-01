@@ -47,7 +47,7 @@ publish {
     //项目名称，创建Package的那个名称
     artifactId = 'MoveConstraintLayout'
     //版本号
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     //说明
     desc = 'Inherited from ConstraintLayout, the child view can be moved arbitrarily'
     website = 'https://github.com/lijinjiliangcha/MoveConstraintLayout'

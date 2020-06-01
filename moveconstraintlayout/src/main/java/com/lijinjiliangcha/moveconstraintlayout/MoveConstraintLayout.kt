@@ -196,29 +196,6 @@ class MoveConstraintLayout : ConstraintLayout {
         return null
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        Log.i("测试", "onLayout")
-
-//        moveViewList.forEach {
-//            val viewWidget = getViewWidget(it)
-////            viewWidget.drawX
-//            Log.i("测试", "viewWidget.getX() = ${viewWidget.x}，viewWidget.getY() = ${viewWidget.y}")
-//        }
-
-        super.onLayout(changed, left, top, right, bottom)
-        moveViewList.forEach {
-            //            val params = it.layoutParams as LayoutParams
-//            //不能超出屏幕边界时
-//            if (!params.beyondTheBorder) {
-//                val l = checkHorizontallyBorder(it, it.left)
-//                val t = checkVerticallyBorder(it, it.top)
-//                it.layout(l, t, l + it.width, t + it.height)
-//            }
-            Log.i("测试", "view.left = ${it.left}，view.top = ${it.top}")
-        }
-
-    }
-
     class LayoutParams : ConstraintLayout.LayoutParams {
 
         //是否可以移动
