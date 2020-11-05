@@ -50,13 +50,10 @@ class MoveConstraintLayout : ConstraintLayout {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        Log.i("测试", "onMeasure")
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         moveViewList.forEach {
             val layoutParams = it.layoutParams as LayoutParams
             val viewWidget = getViewWidget(it)
-            Log.i("测试", "l = ${it.left}，t = ${it.top}")
-            Log.i("测试", "viewWidget.x = ${viewWidget.x}，viewWidget.y = ${viewWidget.y}")
             val x: Int
             val y: Int
             if (layoutParams.skipMeasure) {
@@ -67,7 +64,6 @@ class MoveConstraintLayout : ConstraintLayout {
                 y = checkVerticallyBorder(viewWidget.y, viewWidget.height)
 
             }
-            Log.i("测试", "x = $x，y = $y")
             viewWidget.setOrigin(x, y)
             viewWidget.updateDrawPosition()
         }
@@ -91,13 +87,11 @@ class MoveConstraintLayout : ConstraintLayout {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        Log.i("测试", "onTouchEvent")
         return moveView != null
     }
 
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        Log.i("测试", "dispatchTouchEvent")
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 dx = event.x
@@ -164,7 +158,6 @@ class MoveConstraintLayout : ConstraintLayout {
 
     //检测view是否超出边界
     private fun checkHorizontallyBorder(left: Int, viewWidth: Int): Int {
-        Log.i("测试", "width = $width，measuredWidth = $measuredWidth")
         val w = if (width != 0) width else measuredWidth
         if (w != 0)
             if (left < movePaddingLeft)
@@ -176,7 +169,6 @@ class MoveConstraintLayout : ConstraintLayout {
 
     //检测view是否超出边界
     private fun checkVerticallyBorder(top: Int, viewHeight: Int): Int {
-        Log.i("测试", "height = ${height}，measuredHeight = $measuredHeight")
         val h = if (height != 0) height else measuredHeight
         if (h != 0)
             if (top < movePaddingTop)
