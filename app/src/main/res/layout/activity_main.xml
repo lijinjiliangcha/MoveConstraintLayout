@@ -48,7 +48,7 @@
     <TextView
         android:id="@+id/tv_move_1"
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:background="#0f0"
         android:gravity="center"
         android:text="垂直移动"
@@ -58,7 +58,7 @@
 
     <TextView
         android:id="@+id/tv_move_2"
-        android:layout_width="100dp"
+        android:layout_width="50dp"
         android:layout_height="100dp"
         android:background="#0f0"
         android:gravity="center"

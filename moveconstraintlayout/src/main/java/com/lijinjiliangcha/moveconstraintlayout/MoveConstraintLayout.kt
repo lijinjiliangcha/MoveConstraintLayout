@@ -148,7 +148,7 @@ class MoveConstraintLayout : ConstraintLayout {
         val params = view.layoutParams as LayoutParams
         var l = view.left + if (params.canMoveHorizontally) x else 0
         if (!params.beyondTheBorder) {
-            l = checkHorizontallyBorder(l, view.height)
+            l = checkHorizontallyBorder(l, view.width)
         }
         return l
     }
@@ -157,7 +157,7 @@ class MoveConstraintLayout : ConstraintLayout {
         val params = view.layoutParams as LayoutParams
         var t = view.top + if (params.canMoveVertically) y else 0
         if (!params.beyondTheBorder) {
-            t = checkVerticallyBorder(t, view.width)
+            t = checkVerticallyBorder(t, view.height)
         }
         return t
     }
